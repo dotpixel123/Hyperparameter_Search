@@ -59,12 +59,14 @@ def train_xgboost(hyperparams: dict):
         "eval_metric": "logloss",
     }
 
+    num_boost_round = hyperparams.get("n_estimators", 100)
     params = {**base_params, **hyperparams}
+    params.pop("n_estimators", None)
 
     model = xgb.train(
         params=params,
         dtrain=dtrain,
-        num_boost_round=hyperparams.get("n_estimators", 100),
+        num_boost_round=num_boost_round,
         evals=[(dval, "validation")],
         early_stopping_rounds=20,
         verbose_eval=False
