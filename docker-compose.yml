@@ -1,0 +1,31 @@
+version: "3.9"
+
+services:
+
+  postgres:
+    image: postgres:15
+    container_name: ml_postgres
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: kiit1280
+      POSTGRES_DB: ml_hyperopt
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  fastapi:
+    build: .
+    container_name: ml_fastapi
+    depends_on:
+      - postgres
+    ports:
+      - "8000:8000"
+    environment:
+      DB_HOST: postgres
+    volumes:
+      - .:/app
+
+volumes:
+  pgdata:
